@@ -32,7 +32,7 @@ export default function Status({ item, tasks }) {
       </div>
       <div className="mt-[30px] flex flex-col gap-[30px]">
         {tasks.map((item, id) => (
-          <TaskBox key={item.id} item={item} color={color} />
+          <TaskBox key={item.id} item={item} colorid={item.status.id} />
         ))}
       </div>
     </div>

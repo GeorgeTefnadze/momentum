@@ -34,9 +34,10 @@ const formatDate = (dateString) => {
 const API_KEY = import.meta.env.VITE_API_KEY;
 const API_URL = "https://momentum.redberryinternship.ge/api";
 
-export default function TaskBox({ item, color }) {
+export default function TaskBox({ item, colorid }) {
   const [commentsCount, setCommentsCount] = useState("");
   const [departmentColor, setDepartmentColor] = useState("");
+  const [color, setColor] = useState("");
 
   useEffect(() => {
     axios
@@ -53,6 +54,25 @@ export default function TaskBox({ item, color }) {
         console.error("Error fetching data:", error);
       });
   }, []);
+
+  useEffect(() => {
+    switch (colorid) {
+      case 1:
+        setColor("outline-1 outline-mainyellow");
+        break;
+      case 2:
+        setColor("outline-1 outline-mainorange");
+        break;
+      case 3:
+        setColor("outline-1 outline-mainpink");
+        break;
+      case 4:
+        setColor("outline-1 outline-mainblue");
+        break;
+      default:
+        setColor("");
+    }
+  }, [colorid]);
 
   useEffect(() => {
     switch (item.department.id) {
@@ -85,9 +105,7 @@ export default function TaskBox({ item, color }) {
 
   return (
     <div
-      className={`flex flex-col gap-[28px] w-[381px] h-[217px] p-[20px] outline ${
-        color ? "outline-" + color : ""
-      } rounded-[15px]`}
+      className={`flex flex-col gap-[28px] w-[381px] h-[217px] p-[20px] ${color} rounded-[15px]`}
     >
       <div className="flex justify-between">
         <div className="flex gap-[10px] items-center">

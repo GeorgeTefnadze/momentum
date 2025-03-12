@@ -31,7 +31,7 @@ body {
   display: inline-block;
   width: 20px;
   height: 20px;
-  border: 2px solid #8338ec;
+  /* border: 2px solid #8338ec; */
   background: white;
   border-radius: 4px;
   position: relative;
@@ -47,7 +47,7 @@ body {
   top: 2px;
   width: 6px;
   height: 10px;
-  border: solid #8338ec;
+  /* border: solid #8338ec; */
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
   opacity: 0;

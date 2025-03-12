@@ -15,7 +15,7 @@ export default function Nav() {
   }, []);
   return (
     <div
-      className={`fixed flex justify-between items-center w-full h-[100px] px-[120px] py-[30px] bg-white z-10 duration-200 ${
+      className={`fixed flex justify-between items-center w-full h-[100px] px-[120px] py-[30px] bg-white z-30 duration-200 ${
         scrollY > 0 ? "drop-shadow-xl" : ""
       }`}
     >

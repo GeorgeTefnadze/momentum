@@ -1,16 +1,47 @@
 import { forwardRef, useState, useEffect, useRef } from "react";
 
-const Dropdown = ({ label, options }) => {
+const Dropdown = ({ label, options, getDropdownFilters }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [departmentColor, setDepartmentColor] = useState("");
+
   const dropdownRef = useRef(null);
   const parentRef = useRef(null);
+
+  function getColor(id) {
+    switch (id) {
+      case 1:
+        return "border-mainpurple after:border-mainpurple";
+
+      case 2:
+        return "border-mainred after:border-mainred";
+
+      case 3:
+        return "border-mainyellow after:border-mainyellow";
+
+      case 4:
+        return "border-maingreen after:border-maingreen";
+
+      case 5:
+        return "border-mainblue after:border-mainblue";
+
+      case 6:
+        return "border-mainorange after:border-mainorange";
+
+      case 7:
+        return "border-mainpink after:border-mainpink";
+
+      default:
+        break;
+    }
+  }
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
   const handleCheckboxChange = (option) => {
+    getDropdownFilters(label, option);
     setSelectedOptions((prev) =>
       prev.includes(option)
         ? prev.filter((item) => item !== option)
@@ -78,7 +109,13 @@ const Dropdown = ({ label, options }) => {
                 onChange={() => handleCheckboxChange(option)}
                 className="mr-2"
               />
-              <span className="checkmark"></span>
+              <span
+                className={`checkmark border-2 ${
+                  label == "დეპარტამენტი"
+                    ? getColor(option.id)
+                    : "border-mainpurple after:border-mainpurple"
+                } `}
+              ></span>
               {label == "თანამშრომელი" ? (
                 <div className="flex items-center gap-[15px]">
                   <div className="flex items-center justify-center rounded-full overflow-hidden h-[28px] w-[28px]">
@@ -93,7 +130,10 @@ const Dropdown = ({ label, options }) => {
           ))}
 
           <div className="flex w-full justify-end mt-[10px]">
-            <button className="w-[155px] h-[35px] bg-purple-600 text-white rounded-[20px] cursor-pointer hover:bg-purple-700">
+            <button
+              onClick={toggleDropdown}
+              className="w-[155px] h-[35px] bg-purple-600 text-white rounded-[20px] cursor-pointer hover:bg-purple-700"
+            >
               არჩევა
             </button>
           </div>
