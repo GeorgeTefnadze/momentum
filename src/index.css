@@ -2,10 +2,14 @@
 
 @theme {
   --color-mainpurple: #8338ec;
+  --color-hoverpurple: #b588f4;
   --color-mainyellow: #f7bc30;
   --color-mainorange: #fb5607;
   --color-mainpink: #ff66a8;
   --color-mainblue: #3a86ff;
+  --color-maingray: #343a40;
+  --color-maingreen: #08a508;
+  --color-mainred: #fa4d4d;
 }
 
 @font-face {
@@ -19,19 +23,16 @@ body {
   font-family: "firaGO";
 }
 
-/* Hide the default checkbox */
-
 .custom-checkbox input {
   display: none;
 }
 
-/* Custom checkbox box */
 .custom-checkbox .checkmark {
   display: inline-block;
   width: 20px;
   height: 20px;
-  border: 2px solid black;
-  background: white; /* White box */
+  border: 2px solid #8338ec;
+  background: white;
   border-radius: 4px;
   position: relative;
   cursor: pointer;
@@ -39,7 +40,6 @@ body {
   margin-right: 15px;
 }
 
-/* Checkmark (Black Tick) */
 .custom-checkbox .checkmark::after {
   content: "";
   position: absolute;
@@ -47,13 +47,12 @@ body {
   top: 2px;
   width: 6px;
   height: 10px;
-  border: solid black; /* Black checkmark */
+  border: solid #8338ec;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
-  opacity: 0; /* Hidden initially */
+  opacity: 0;
 }
 
-/* Show checkmark when checked */
 .custom-checkbox input:checked + .checkmark::after {
   opacity: 1;
 }

@@ -1,6 +1,6 @@
 import Nav from "./components/Nav";
 import Dropdown from "./elements/Dropdown";
-import Tasks from "./components/Tasks";
+import TasksComponent from "./components/Tasks";
 
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -13,18 +13,25 @@ const App = () => {
   const [departments, setDepartments] = useState([]);
   const [priorities, setPriorities] = useState([]);
   const [employees, setEmployees] = useState([]);
+  const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [statusRes, departmentRes, priorityRes, employeesRes] =
+        const [statusRes, departmentRes, priorityRes, employeesRes, tasksRes] =
           await Promise.all([
             axios.get(API_URL + "/statuses"),
             axios.get(API_URL + "/departments"),
             axios.get(API_URL + "/priorities"),
             axios.get(API_URL + "/employees", {
+              headers: {
+                Authorization: `Bearer ${API_KEY}`,
+                Accept: "application/json",
+              },
+            }),
+            axios.get(API_URL + "/tasks", {
               headers: {
                 Authorization: `Bearer ${API_KEY}`,
                 Accept: "application/json",
@@ -36,6 +43,7 @@ const App = () => {
         setDepartments(departmentRes.data);
         setPriorities(priorityRes.data);
         setEmployees(employeesRes.data);
+        setTasks(tasksRes.data);
       } catch (err) {
         setError("Error fetching data");
         console.error(err);
@@ -47,17 +55,22 @@ const App = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    console.log(tasks);
+  }, [tasks]);
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
   return (
     <div>
       <Nav />
-      <Tasks
+      <TasksComponent
         departments={departments}
         priorities={priorities}
         statuses={statuses}
         employees={employees}
+        tasks={tasks}
       />
     </div>
   );

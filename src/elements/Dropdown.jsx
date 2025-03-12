@@ -18,7 +18,6 @@ const Dropdown = ({ label, options }) => {
     );
   };
 
-  // Handle click outside to close dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -28,12 +27,10 @@ const Dropdown = ({ label, options }) => {
       }
     };
 
-    // Add event listener when dropdown is open
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
-    // Cleanup event listener when dropdown closes
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -41,11 +38,10 @@ const Dropdown = ({ label, options }) => {
 
   return (
     <div className={`w-[199px]`}>
-      {/* Dropdown Button */}
       <button
         onClick={toggleDropdown}
-        className={`w-full px-[18px] py-[10px] flex gap-2 items-center cursor-pointer ${
-          isOpen ? "outline rounded-[5px]" : ""
+        className={`w-full px-[18px] py-[10px] flex gap-2 items-center cursor-pointer hover:text-hoverpurple ${
+          isOpen ? "outline outline-black rounded-[5px]" : ""
         }`}
         ref={parentRef}
       >
@@ -66,7 +62,6 @@ const Dropdown = ({ label, options }) => {
         </svg>
       </button>
 
-      {/* Dropdown List */}
       {isOpen && (
         <div
           className={`absolute left-0 w-full mt-2 px-[20px] py-[15px] bg-white border border-mainpurple shadow-lg rounded-lg z-10`}
@@ -84,12 +79,19 @@ const Dropdown = ({ label, options }) => {
                 className="mr-2"
               />
               <span className="checkmark"></span>
-              {label != "თანამშრომელი"
-                ? option.name
-                : `${option.name} ${option.surname}`}
+              {label == "თანამშრომელი" ? (
+                <div className="flex items-center gap-[15px]">
+                  <div className="flex items-center justify-center rounded-full overflow-hidden h-[28px] w-[28px]">
+                    <img src={option.avatar} alt="" />
+                  </div>
+                  <p>{`${option.name} ${option.surname}`}</p>
+                </div>
+              ) : (
+                option.name
+              )}
             </label>
           ))}
-          {/* Submit Button */}
+
           <div className="flex w-full justify-end mt-[10px]">
             <button className="w-[155px] h-[35px] bg-purple-600 text-white rounded-[20px] cursor-pointer hover:bg-purple-700">
               არჩევა
