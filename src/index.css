@@ -8,8 +8,10 @@
   --color-mainpink: #ff66a8;
   --color-mainblue: #3a86ff;
   --color-maingray: #343a40;
+  --color-textgray: #6c757d;
   --color-maingreen: #08a508;
   --color-mainred: #fa4d4d;
+  --color-mainoutline: #ced4da;
 }
 
 @font-face {

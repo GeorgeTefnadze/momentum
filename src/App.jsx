@@ -1,6 +1,8 @@
 import Nav from "./components/Nav";
 import Dropdown from "./elements/Dropdown";
 import TasksComponent from "./components/Tasks";
+import Modal from "./components/Modal";
+import useModalStore from "./useModalStore";
 
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -16,6 +18,8 @@ const App = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const { isOpen, openModal, closeModal } = useModalStore();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,7 +68,8 @@ const App = () => {
 
   return (
     <div>
-      <Nav />
+      <Modal isOpen={isOpen} onClose={closeModal} departments={departments} />
+      <Nav openModal={openModal} />
       <TasksComponent
         departments={departments}
         priorities={priorities}

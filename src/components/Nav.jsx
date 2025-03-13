@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import momentumLogo from "../assets/momentum.svg";
 import addIcon from "../assets/add.svg";
 
-export default function Nav() {
+export default function Nav({ openModal }) {
   const [scrollY, setScrollY] = useState(window.scrollY);
 
   useEffect(() => {
@@ -22,6 +22,7 @@ export default function Nav() {
       <img src={momentumLogo} alt="" className="w-[210px]" />
       <div className="flex gap-[40px]">
         <a
+          onClick={openModal}
           href="#"
           className="px-[20px] py-[10px] text-[16px] border-1 border-mainpurple hover:border-hoverpurple duration-200 rounded-[5px]"
         >

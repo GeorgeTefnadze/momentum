@@ -118,8 +118,12 @@ const Dropdown = ({ label, options, getDropdownFilters }) => {
               ></span>
               {label == "თანამშრომელი" ? (
                 <div className="flex items-center gap-[15px]">
-                  <div className="flex items-center justify-center rounded-full overflow-hidden h-[28px] w-[28px]">
-                    <img src={option.avatar} alt="" />
+                  <div className="flex items-center justify-center  rounded-full overflow-hidden h-[28px] w-[28px]">
+                    <img
+                      src={option.avatar}
+                      alt=""
+                      className="object-cover h-full"
+                    />
                   </div>
                   <p>{`${option.name} ${option.surname}`}</p>
                 </div>
