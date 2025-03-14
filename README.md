@@ -1,6 +1,6 @@
 # 🚀 Momentum - Task Tracking Web App
 
-Momentum is a modern task-tracking web application designed to help users efficiently manage their tasks with an intuitive interface and seamless navigation.
+Momentum is a modern task-tracking web application (RedBerry BootCamp)
 
 ## ✨ Features
 
