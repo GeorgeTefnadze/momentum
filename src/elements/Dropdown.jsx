@@ -1,8 +1,15 @@
 import { forwardRef, useState, useEffect, useRef } from "react";
 
-const Dropdown = ({ label, options, getDropdownFilters }) => {
+const Dropdown = ({
+  label,
+  options,
+  getDropdownFilters,
+  identifyer,
+  arrgetter,
+  arrsetter,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  // const [selectedOptions, setSelectedOptions] = useState([]);
   const [departmentColor, setDepartmentColor] = useState("");
 
   const dropdownRef = useRef(null);
@@ -42,11 +49,11 @@ const Dropdown = ({ label, options, getDropdownFilters }) => {
 
   const handleCheckboxChange = (option) => {
     getDropdownFilters(label, option);
-    setSelectedOptions((prev) =>
-      prev.includes(option)
-        ? prev.filter((item) => item !== option)
-        : [...prev, option]
-    );
+    // arrsetter((prev) =>
+    //   prev.includes(option)
+    //     ? prev.filter((item) => item !== option)
+    //     : [...prev, option]
+    // );
   };
 
   useEffect(() => {
@@ -105,7 +112,7 @@ const Dropdown = ({ label, options, getDropdownFilters }) => {
             >
               <input
                 type="checkbox"
-                checked={selectedOptions.includes(option)}
+                checked={arrgetter.includes(option.id)}
                 onChange={() => handleCheckboxChange(option)}
                 className="mr-2"
               />

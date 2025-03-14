@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
+
 import Dropdown from "../elements/Dropdown";
 import Status from "../elements/Status";
-import { preconnect } from "react-dom";
+import Filters from "../elements/Filters";
+
+import useLocalStorageState from "../hooks/useLocalStorageState";
 
 export default function Tasks({
   departments,
@@ -10,9 +13,20 @@ export default function Tasks({
   employees,
   tasks,
 }) {
-  const [departmentFilters, setDepartmentFilters] = useState([]);
-  const [priorityFilters, setpriorityFilters] = useState([]);
-  const [employeesFilters, setEmployeesFilters] = useState([]);
+  const [employeesFilters, setEmployeesFilters] = useLocalStorageState(
+    "employeesFilters",
+    []
+  );
+
+  const [departmentFilters, setDepartmentFilters] = useLocalStorageState(
+    "departmentFilters",
+    []
+  );
+  const [priorityFilters, setPriorityFilters] = useLocalStorageState(
+    "priorityFilters",
+    []
+  );
+
   const [filteredTasks, setFilteredTasks] = useState(tasks);
 
   function getDropdownFilters(label, option) {
@@ -25,7 +39,7 @@ export default function Tasks({
         );
         break;
       case "პრიორიტეტი":
-        setpriorityFilters((prev) =>
+        setPriorityFilters((prev) =>
           prev.includes(option.id)
             ? prev.filter((item) => item !== option.id)
             : [...prev, option.id]
@@ -70,6 +84,29 @@ export default function Tasks({
   useEffect(() => {
     filterTasks();
   }, [departmentFilters, priorityFilters, employeesFilters]);
+
+  function handleFilters(identifyer, id) {
+    switch (identifyer) {
+      case 1:
+        setDepartmentFilters((prev) => prev.filter((item) => item != id));
+        break;
+      case 2:
+        setPriorityFilters((prev) => prev.filter((item) => item != id));
+        break;
+      case 3:
+        setEmployeesFilters((prev) => prev.filter((item) => item != id));
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  function clearFilters() {
+    setEmployeesFilters([]);
+    setDepartmentFilters([]);
+    setPriorityFilters([]);
+  }
   return (
     <div className="px-[120px] pt-[140px] pb-[131px]">
       <h1 className="text-[34px]">დავალებების გვერდი</h1>
@@ -78,19 +115,64 @@ export default function Tasks({
           label="დეპარტამენტი"
           options={departments}
           getDropdownFilters={getDropdownFilters}
+          identifyer={1}
+          arrgetter={departmentFilters}
+          arrsetter={setDepartmentFilters}
         />
         <Dropdown
           label="პრიორიტეტი"
           options={priorities}
           getDropdownFilters={getDropdownFilters}
+          identifyer={2}
+          arrgetter={priorityFilters}
+          arrsetter={setPriorityFilters}
         />
         <Dropdown
           label="თანამშრომელი"
           options={employees}
           getDropdownFilters={getDropdownFilters}
+          identifyer={3}
+          arrgetter={employeesFilters}
+          arrsetter={setEmployeesFilters}
         />
       </div>
-      <div className="mt-[79px] flex justify-between">
+      <div className="flex gap-4 flex-wrap items-center mt-[25px] min-h-[29px] w-full">
+        {departmentFilters.map((item) => (
+          <Filters
+            key={item}
+            info={departments.find((el) => el.id == item)}
+            identifyer={1}
+            handleFilters={handleFilters}
+          />
+        ))}
+        {priorityFilters.map((item) => (
+          <Filters
+            key={item}
+            info={priorities.find((el) => el.id == item)}
+            identifyer={2}
+            handleFilters={handleFilters}
+          />
+        ))}
+        {employeesFilters.map((item) => (
+          <Filters
+            key={item}
+            info={employees.find((el) => el.id == item)}
+            identifyer={3}
+            handleFilters={handleFilters}
+          />
+        ))}
+        {departmentFilters.length ||
+        priorityFilters.length ||
+        employeesFilters.length ? (
+          <button
+            onClick={() => clearFilters()}
+            className="text-[14px] text-textgray cursor-pointer"
+          >
+            გასუფთავება
+          </button>
+        ) : null}
+      </div>
+      <div className="mt-[24px] flex justify-between">
         {statuses.map((item, index) => (
           <Status
             key={index}
