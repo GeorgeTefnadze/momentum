@@ -1,5 +1,4 @@
 import Nav from "./components/Nav";
-import Dropdown from "./elements/Dropdown";
 import TasksComponent from "./components/Tasks";
 import Modal from "./components/Modal";
 import useModalStore from "./useModalStore";
@@ -7,8 +6,9 @@ import useModalStore from "./useModalStore";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+// API_KEY ანუ BearerToken და API_URL რომლებსაც ვიღებთ .env ფაილიდან
 const API_KEY = import.meta.env.VITE_API_KEY;
-const API_URL = "https://momentum.redberryinternship.ge/api";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const App = () => {
   const [statuses, setStatuses] = useState([]);
@@ -19,8 +19,10 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // თანამშრომლის შექმნისთვის საჭირო მოდალის state (zustand)
   const { isOpen, openModal, closeModal } = useModalStore();
 
+  // რექუესთი API endpoint თან
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -58,10 +60,6 @@ const App = () => {
 
     fetchData();
   }, []);
-
-  useEffect(() => {
-    console.log(tasks);
-  }, [tasks]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;

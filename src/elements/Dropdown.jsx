@@ -1,5 +1,7 @@
 import { forwardRef, useState, useEffect, useRef } from "react";
 
+import useColorById from "../hooks/useColorById";
+
 const Dropdown = ({
   label,
   options,
@@ -10,7 +12,6 @@ const Dropdown = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   // const [selectedOptions, setSelectedOptions] = useState([]);
-  const [departmentColor, setDepartmentColor] = useState("");
 
   const dropdownRef = useRef(null);
   const parentRef = useRef(null);
@@ -105,40 +106,45 @@ const Dropdown = ({
           className={`absolute left-0 w-full mt-2 px-[20px] py-[15px] bg-white border border-mainpurple shadow-lg rounded-lg z-10`}
           ref={dropdownRef}
         >
-          {options.map((option) => (
-            <label
-              key={option.id}
-              className="custom-checkbox flex items-center px-4 py-2 cursor-pointer"
-            >
-              <input
-                type="checkbox"
-                checked={arrgetter.includes(option.id)}
-                onChange={() => handleCheckboxChange(option)}
-                className="mr-2"
-              />
-              <span
-                className={`checkmark border-2 ${
-                  label == "დეპარტამენტი"
-                    ? getColor(option.id)
-                    : "border-mainpurple after:border-mainpurple"
-                } `}
-              ></span>
-              {label == "თანამშრომელი" ? (
-                <div className="flex items-center gap-[15px]">
-                  <div className="flex items-center justify-center  rounded-full overflow-hidden h-[28px] w-[28px]">
-                    <img
-                      src={option.avatar}
-                      alt=""
-                      className="object-cover h-full"
-                    />
+          {options.map((option) => {
+            return (
+              <label
+                key={option.id}
+                className="custom-checkbox flex items-center px-4 py-2 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  checked={arrgetter.includes(option.id)}
+                  onChange={() => handleCheckboxChange(option)}
+                  className="mr-2"
+                />
+                <span
+                  className={`checkmark border-2 ${
+                    label == "დეპარტამენტი"
+                      ? "border-" +
+                        useColorById("department", option.id) +
+                        " after:border-" +
+                        useColorById("department", option.id)
+                      : "border-mainpurple after:border-mainpurple"
+                  } `}
+                ></span>
+                {label == "თანამშრომელი" ? (
+                  <div className="flex items-center gap-[15px]">
+                    <div className="flex items-center justify-center  rounded-full overflow-hidden h-[28px] w-[28px]">
+                      <img
+                        src={option.avatar}
+                        alt=""
+                        className="object-cover h-full"
+                      />
+                    </div>
+                    <p>{`${option.name} ${option.surname}`}</p>
                   </div>
-                  <p>{`${option.name} ${option.surname}`}</p>
-                </div>
-              ) : (
-                option.name
-              )}
-            </label>
-          ))}
+                ) : (
+                  option.name
+                )}
+              </label>
+            );
+          })}
 
           <div className="flex w-full justify-end mt-[10px]">
             <button

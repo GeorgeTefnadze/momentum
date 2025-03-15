@@ -1,0 +1,4 @@
+move usemodalstore inside hooks folder
+close modal when unfocused
+in taskboxes make text max length 100 characters instead of two lines
+in app.jsx make loading screen

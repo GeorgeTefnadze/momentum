@@ -1,27 +1,10 @@
 import React, { useState, useEffect } from "react";
 import TaskBox from "./TaskBox";
 
-export default function Status({ item, tasks }) {
-  const [color, setColor] = useState("");
+import useColorById from "../hooks/useColorById";
 
-  useEffect(() => {
-    switch (item.id) {
-      case 1:
-        setColor("mainyellow");
-        break;
-      case 2:
-        setColor("mainorange");
-        break;
-      case 3:
-        setColor("mainpink");
-        break;
-      case 4:
-        setColor("mainblue");
-        break;
-      default:
-        setColor("black");
-    }
-  }, [item]);
+export default function Status({ item, tasks }) {
+  const color = useColorById("status", item.id);
 
   return (
     <div>

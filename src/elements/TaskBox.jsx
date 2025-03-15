@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 
-import Low from "../assets/Low.svg";
-import Medium from "../assets/Medium.svg";
-import High from "../assets/High.svg";
-import Pfp from "../assets/Ellipse 3892.png";
+import useColorById from "../hooks/useColorById";
+
 import Comment from "../assets/Comments.svg";
 
 const georgianMonths = [
@@ -22,6 +19,7 @@ const georgianMonths = [
   "დეკ",
 ];
 
+// აბრუნებს თარიღს დიზაინში მოცემულ ფორმატში
 const formatDate = (dateString) => {
   const date = new Date(dateString.replace(" ", "T"));
   const day = date.getDate();
@@ -31,81 +29,13 @@ const formatDate = (dateString) => {
   return `${day} ${month}, ${year}`;
 };
 
-const API_KEY = import.meta.env.VITE_API_KEY;
-const API_URL = "https://momentum.redberryinternship.ge/api";
-
 export default function TaskBox({ item, colorid }) {
-  const [commentsCount, setCommentsCount] = useState("");
-  const [departmentColor, setDepartmentColor] = useState("");
-  const [color, setColor] = useState("");
-
-  useEffect(() => {
-    axios
-      .get(API_URL + `/tasks/${item.id}/comments`, {
-        headers: {
-          Authorization: `Bearer ${API_KEY}`,
-          Accept: "application/json",
-        },
-      })
-      .then((response) => {
-        setCommentsCount(response.data.length);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
-
-  useEffect(() => {
-    switch (colorid) {
-      case 1:
-        setColor("outline-1 outline-mainyellow");
-        break;
-      case 2:
-        setColor("outline-1 outline-mainorange");
-        break;
-      case 3:
-        setColor("outline-1 outline-mainpink");
-        break;
-      case 4:
-        setColor("outline-1 outline-mainblue");
-        break;
-      default:
-        setColor("");
-    }
-  }, [colorid]);
-
-  useEffect(() => {
-    switch (item.department.id) {
-      case 1:
-        setDepartmentColor("bg-mainpurple");
-        break;
-      case 2:
-        setDepartmentColor("bg-mainred");
-        break;
-      case 3:
-        setDepartmentColor("bg-mainyellow");
-        break;
-      case 4:
-        setDepartmentColor("bg-maingreen");
-        break;
-      case 5:
-        setDepartmentColor("bg-mainblue");
-        break;
-      case 6:
-        setDepartmentColor("bg-mainorange");
-        break;
-      case 7:
-        setDepartmentColor("bg-mainpink");
-        break;
-
-      default:
-        break;
-    }
-  }, [item]);
+  const color = useColorById("status", colorid);
+  const departmentColor = useColorById("department", item.department.id);
 
   return (
     <div
-      className={`flex flex-col gap-[28px] w-[381px] h-[217px] p-[20px] ${color} rounded-[15px]`}
+      className={`flex flex-col gap-[28px] w-[381px] h-[217px] p-[20px] outline-1 outline-${color} rounded-[15px]`}
     >
       <div className="flex justify-between">
         <div className="flex gap-[10px] items-center">
@@ -122,7 +52,7 @@ export default function TaskBox({ item, colorid }) {
             <p>{item.priority.name}</p>
           </div>
           <div
-            className={`w-[88px] h-[24px] text-[12px] text-white flex items-center justify-center  rounded-[15px] ${departmentColor}`}
+            className={`w-[88px] h-[24px] text-[12px] text-white flex items-center justify-center  rounded-[15px] bg-${departmentColor}`}
           >
             <p>
               {item.department.name.length >= 10
@@ -155,7 +85,7 @@ export default function TaskBox({ item, colorid }) {
           <div>
             <img src={Comment} alt="" />
           </div>
-          <p>{commentsCount ? commentsCount : 0}</p>
+          <p>{item.total_comments}</p>
         </div>
       </div>
     </div>

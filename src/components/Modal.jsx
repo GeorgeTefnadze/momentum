@@ -7,12 +7,14 @@ import uploadIcon from "../assets/uploadIcon.svg";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
+// API_KEY ანუ BearerToken და API_URL რომლებსაც ვიღებთ .env ფაილიდან
 const API_KEY = import.meta.env.VITE_API_KEY;
-const API_URL = "https://momentum.redberryinternship.ge/api";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Modal = ({ isOpen, onClose, departments }) => {
   if (!isOpen) return null;
 
+  // ფორმის state
   const [formData, setFormData] = useState({
     name: "",
     surname: "",
@@ -23,6 +25,7 @@ const Modal = ({ isOpen, onClose, departments }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [errors, setErrors] = useState({});
 
+  // სურათის ატვირთვა
   const handleFileChange = (event) => {
     const file = event.target.files[0];
 
@@ -54,6 +57,7 @@ const Modal = ({ isOpen, onClose, departments }) => {
     });
   };
 
+  // ფორმის ვალიდაცია
   const validateForm = () => {
     let newErrors = {};
     const nameRegex = /^[ა-ჰa-zA-Z]{2,255}$/;
@@ -79,6 +83,7 @@ const Modal = ({ isOpen, onClose, departments }) => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // API რექუესთი
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -116,10 +121,7 @@ const Modal = ({ isOpen, onClose, departments }) => {
   };
 
   return (
-    <div
-      //   onClick={onClose}
-      className="fixed w-screen h-screen z-50 flex items-center justify-center bg-[rgba(0,0,0,0.5)] backdrop-blur-sm"
-    >
+    <div className="fixed w-screen h-screen z-50 flex items-center justify-center bg-[rgba(0,0,0,0.5)] backdrop-blur-sm">
       <div className="bg-white w-[913px] h-[766px] rounded-[10px] px-[50px] pt-[40px] pb-[60px]">
         <div className="flex justify-end">
           <button onClick={onClose} className="cursor-pointer">
