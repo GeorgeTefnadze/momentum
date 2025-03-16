@@ -4,12 +4,14 @@ import TaskBox from "./TaskBox";
 import useColorById from "../hooks/useColorById";
 
 export default function Status({ item, tasks }) {
-  const color = useColorById("status", item.id);
-
   return (
     <div>
       <div
-        className={`w-[381px] h-[54px] rounded-[10px] flex items-center justify-center text-white text-[20px] font-medium bg-${color}`}
+        className={`w-[381px] h-[54px] rounded-[10px] flex items-center justify-center text-white text-[20px] font-medium ${useColorById(
+          "status",
+          item.id,
+          "bg"
+        )}`}
       >
         {item.name}
       </div>

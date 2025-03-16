@@ -1,16 +1,23 @@
-import Nav from "./components/Nav";
-import TasksComponent from "./components/Tasks";
-import Modal from "./components/Modal";
+import React from "react";
+import { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import useModalStore from "./useModalStore";
 
-import { useEffect, useState } from "react";
+import Nav from "./components/Nav";
+import TaskPage from "./routes/TaskPage";
+import TasksComponent from "./components/Tasks";
+import Modal from "./components/Modal";
+
 import axios from "axios";
 
 // API_KEY ანუ BearerToken და API_URL რომლებსაც ვიღებთ .env ფაილიდან
 const API_KEY = import.meta.env.VITE_API_KEY;
 const API_URL = import.meta.env.VITE_API_URL;
 
-const App = () => {
+export default function RouterManager() {
+  // თანამშრომლის შექმნისთვის საჭირო მოდალის state (zustand)
+  const { isOpen, openModal, closeModal } = useModalStore();
+
   const [statuses, setStatuses] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [priorities, setPriorities] = useState([]);
@@ -18,9 +25,6 @@ const App = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // თანამშრომლის შექმნისთვის საჭირო მოდალის state (zustand)
-  const { isOpen, openModal, closeModal } = useModalStore();
 
   // რექუესთი API endpoint თან
   useEffect(() => {
@@ -60,23 +64,28 @@ const App = () => {
 
     fetchData();
   }, []);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
-
   return (
-    <div>
-      <Modal isOpen={isOpen} onClose={closeModal} departments={departments} />
+    <Router>
       <Nav openModal={openModal} />
-      <TasksComponent
-        departments={departments}
-        priorities={priorities}
-        statuses={statuses}
-        employees={employees}
-        tasks={tasks}
-      />
-    </div>
-  );
-};
+      <Modal isOpen={isOpen} onClose={closeModal} departments={departments} />
 
-export default App;
+      <div className="pt-[100px] px-[120px]">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <TasksComponent
+                departments={departments}
+                priorities={priorities}
+                statuses={statuses}
+                employees={employees}
+                tasks={tasks}
+              />
+            }
+          />
+          <Route path="/task/:taskid" element={<TaskPage />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+}

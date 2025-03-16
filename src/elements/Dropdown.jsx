@@ -121,10 +121,9 @@ const Dropdown = ({
                 <span
                   className={`checkmark border-2 ${
                     label == "დეპარტამენტი"
-                      ? "border-" +
-                        useColorById("department", option.id) +
-                        " after:border-" +
-                        useColorById("department", option.id)
+                      ? useColorById("department", option.id, "border") +
+                        " " +
+                        useColorById("department", option.id, "after:border")
                       : "border-mainpurple after:border-mainpurple"
                   } `}
                 ></span>

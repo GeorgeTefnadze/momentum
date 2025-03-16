@@ -27,7 +27,13 @@ export default function Tasks({
     []
   );
 
-  const [filteredTasks, setFilteredTasks] = useState(tasks);
+  const [filteredTasks, setFilteredTasks] = useState([]);
+
+  useEffect(() => {
+    if (tasks) {
+      setFilteredTasks(tasks);
+    }
+  }, [tasks]);
 
   function getDropdownFilters(label, option) {
     switch (label) {
@@ -108,7 +114,7 @@ export default function Tasks({
     setPriorityFilters([]);
   }
   return (
-    <div className="px-[120px] pt-[140px] pb-[131px]">
+    <div className="pt-[40px] pb-[131px]">
       <h1 className="text-[34px]">დავალებების გვერდი</h1>
       <div className="flex justify-between relative w-[688px] mt-[53px] border border-gray-300 rounded-lg">
         <Dropdown

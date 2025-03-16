@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import useColorById from "../hooks/useColorById";
 
@@ -30,29 +31,31 @@ const formatDate = (dateString) => {
 };
 
 export default function TaskBox({ item, colorid }) {
-  const color = useColorById("status", colorid);
-  const departmentColor = useColorById("department", item.department.id);
+  const departmentColor = useColorById("department", item.department.id, "bg");
 
   return (
-    <div
-      className={`flex flex-col gap-[28px] w-[381px] h-[217px] p-[20px] outline-1 outline-${color} rounded-[15px]`}
+    <Link
+      to={"/task/" + item.id}
+      className={`flex flex-col gap-[28px] w-[381px] h-[217px] p-[20px] outline-1 ${useColorById(
+        "status",
+        colorid,
+        "outline"
+      )} rounded-[15px]`}
     >
       <div className="flex justify-between">
         <div className="flex gap-[10px] items-center">
           <div
-            className={`w-[86px] h-[26] flex gap-1 p-1 outline rounded-[5px] text-[12px] ${
-              item.priority.id == 1
-                ? "outline-maingreen text-maingreen"
-                : item.priority.id == 2
-                ? "outline-mainyellow text-mainyellow"
-                : "outline-mainred text-mainred"
-            }`}
+            className={`w-[86px] h-[26] flex gap-1 p-1 outline rounded-[5px] text-[12px] ${useColorById(
+              "priority",
+              item.priority.id,
+              "outline"
+            )} ${useColorById("priority", item.priority.id, "text")}`}
           >
             <img src={item.priority.icon} alt="" />
             <p>{item.priority.name}</p>
           </div>
           <div
-            className={`w-[88px] h-[24px] text-[12px] text-white flex items-center justify-center  rounded-[15px] bg-${departmentColor}`}
+            className={`w-[88px] h-[24px] text-[12px] text-white flex items-center justify-center  rounded-[15px] ${departmentColor}`}
           >
             <p>
               {item.department.name.length >= 10
@@ -88,6 +91,6 @@ export default function TaskBox({ item, colorid }) {
           <p>{item.total_comments}</p>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

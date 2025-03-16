@@ -3,6 +3,7 @@ import FormInputs from "../elements/FormInputs";
 import closeIcon from "../assets/closeIcon.svg";
 import trashIcon from "../assets/trash.svg";
 import uploadIcon from "../assets/uploadIcon.svg";
+import arrowIcon from "../assets/arrowdown.svg";
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -212,7 +213,9 @@ const Modal = ({ isOpen, onClose, departments }) => {
                 >
                   {departments.find((dep) => dep.id === formData.department_id)
                     ?.name || ""}
-                  <span className="text-textgray">▼</span>
+                  <span className="text-textgray">
+                    <img src={arrowIcon} alt="" />
+                  </span>
                 </div>
                 {isDropdownOpen && (
                   <ul className="absolute w-full h-[150px] overflow-y-scroll mt-1 bg-white border border-gray-300 rounded-md shadow-md z-10">

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
 import momentumLogo from "../assets/momentum.svg";
 import addIcon from "../assets/add.svg";
 
@@ -24,7 +26,9 @@ export default function Nav({ openModal }) {
         scrollY > 0 ? "drop-shadow-xl" : ""
       }`}
     >
-      <img src={momentumLogo} alt="Momentum Logo" className="w-[210px]" />
+      <Link to={"/"}>
+        <img src={momentumLogo} alt="Momentum Logo" className="w-[210px]" />
+      </Link>
 
       {/* ღილაკების კონტეინერი */}
       <div className="flex gap-[40px]">
