@@ -4,3 +4,4 @@ in taskboxes make text max length 100 characters instead of two lines
 in app.jsx make loading screen
 add alts to imgs
 update changes without refresh
+pass totalcoments to taskpage and render there

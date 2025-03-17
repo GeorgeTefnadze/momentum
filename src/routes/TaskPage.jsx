@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import useColorById from "../hooks/useColorById";
 
+import CommentElement from "../elements/CommentElement";
+
 import statusIcon from "../assets/status.svg";
 import employeeIcon from "../assets/employee.svg";
 import calendarIcon from "../assets/calendar.svg";
@@ -29,47 +31,72 @@ export default function TaskPage() {
 
   const [taskData, setTaskData] = useState(null);
   const [statuses, setStatuses] = useState(null);
+  const [comments, setComments] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(null);
+  const [commentInput, setCommentInput] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
-      const options = {
-        method: "GET",
-        url: API_URL + "/tasks/" + taskid,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${API_KEY}`,
-        },
-      };
-
-      try {
-        const { data } = await axios.request(options);
-        console.log(data);
-        setTaskData(data);
-        setSelectedStatus(data.status);
-      } catch (error) {
-        console.error(error);
+      if (!taskid) {
+        console.error("Task ID is missing");
+        return;
       }
 
-      const statusoptions = {
-        method: "GET",
-        url: API_URL + "/statuses",
-        headers: {
-          Accept: "application/json",
-        },
-      };
-
       try {
-        const { data } = await axios.request(statusoptions);
-        console.log(data);
-        setStatuses(data);
-      } catch (error) {
-        console.error(error);
+        const [tasksRes, statusRes] = await Promise.all([
+          axios.get(API_URL + "/tasks/" + taskid, {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${API_KEY}`,
+            },
+          }),
+          axios.get(API_URL + "/statuses", {
+            headers: {
+              Accept: "application/json",
+            },
+          }),
+        ]);
+
+        getComments();
+
+        console.log(tasksRes.data);
+        setTaskData(tasksRes.data);
+        setSelectedStatus(tasksRes.data.status);
+        console.log(statusRes.data);
+        setStatuses(statusRes.data);
+      } catch (err) {
+        setError("Error fetching data");
+        console.error(err);
       }
     };
+
     fetchData();
   }, []);
+
+  const getComments = async () => {
+    if (!taskid) {
+      console.error("Task ID is missing");
+      return;
+    }
+    const options = {
+      method: "GET",
+      url: API_URL + "/tasks/" + taskid + "/comments",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${API_KEY}`,
+      },
+    };
+
+    try {
+      const { data } = await axios.request(options);
+      console.log(data);
+      setComments(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const updateStatus = async (statusID) => {
     const options = {
@@ -91,12 +118,38 @@ export default function TaskPage() {
     }
   };
 
-  if (!taskData) {
+  const writeComment = async (comment) => {
+    setCommentInput("");
+    const options = {
+      method: "POST",
+      url: API_URL + "/tasks/" + taskid + "/comments",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${API_KEY}`,
+      },
+      data: {
+        text: comment,
+        parent_id: null,
+      },
+    };
+
+    try {
+      const { data } = await axios.request(options);
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      getComments();
+    }
+  };
+
+  if (!taskData || !comments) {
     return <div>Loading</div>;
   }
 
   return (
-    <div className="flex justify-between  pt-[40px]">
+    <div className="flex justify-between  py-[40px]">
       <div>
         {/* პრიორიტეტი და დეპარტამენტი */}
         <div className="flex items-center gap-[18px]">
@@ -125,7 +178,7 @@ export default function TaskPage() {
           </div>
         </div>
         {/* სათაური და აღწერა */}
-        <div className="flex flex-col gap-[26px] pt-[12px]">
+        <div className="flex flex-col gap-[26px] pt-[12px] w-[715px]">
           <h1 className="text-[34px] font-semibold">{taskData.name}</h1>
           <p className="text-[18px]">{taskData.description}</p>
         </div>
@@ -217,7 +270,42 @@ export default function TaskPage() {
           </div>
         </div>
       </div>
-      <div></div>
+      <div className="w-[741px] bg-commentsbg px-[45px] py-[40px] rounded-[10px]">
+        <div className="flex flex-col items-end bg-white w-full min-h-[135px] rounded-[10px] px-[20px] pt-[18px] pb-[15px]">
+          <textarea
+            onChange={(e) => setCommentInput(e.target.value)}
+            value={commentInput}
+            type="text"
+            name="comment"
+            id="comment"
+            placeholder="დაწერე კომენტარი"
+            className="w-full p-2 border border-none rounded-md focus:outline-none focus:ring-0 resize-none"
+          />
+          <button
+            onClick={() => writeComment(commentInput)}
+            className="px-[20px] py-2 bg-mainpurple text-white rounded-[20px]"
+          >
+            დააკომენტარე
+          </button>
+        </div>
+        <div className="pt-[66px]">
+          <div className="flex gap-[7px] items-center">
+            <h2 className="text-[20px] font-semibold">კომენტარები</h2>
+            <p className="px-[10px] rounded-[30px] text-[14px] bg-mainpurple text-white">
+              {comments.length}
+            </p>
+          </div>
+          <div className="flex flex-col gap-[38px] pt-[40px]">
+            {comments.map((item) => (
+              <CommentElement
+                key={item.id}
+                commentinfo={item}
+                getComments={getComments}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

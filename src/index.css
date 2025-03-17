@@ -13,6 +13,8 @@
   --color-maingreen: #08a508;
   --color-mainred: #fa4d4d;
   --color-mainoutline: #ced4da;
+  --color-commentsbg: #f8f3fe;
+  --color-comentsoutline: #ddd2ff;
 }
 
 @font-face {
