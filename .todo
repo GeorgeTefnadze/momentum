@@ -4,4 +4,12 @@ in taskboxes make text max length 100 characters instead of two lines
 in app.jsx make loading screen
 add alts to imgs
 update changes without refresh
+add validation to comments and replies
 pass totalcoments to taskpage and render there
+update readme add install instructions
+changle loading logic from whole page to sectors
+make employee filter single select
+fix add employee modal inputs
+in modal move custom dropdown to the seperate file and import it
+in viewport fix datepicker
+in taskpage pass info as props

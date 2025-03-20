@@ -42,12 +42,13 @@ export default function Nav({ openModal }) {
         </a>
 
         {/* ღილაკი ახალი დავალების შესაქმნელად */}
-        <a
+        <Link
+          to={"/createTask"}
           href="#"
           className="flex gap-1 px-[20px] py-[10px] text-[16px] border-1 rounded-[5px] bg-mainpurple hover:bg-hoverpurple text-white duration-200"
         >
           <img src={addIcon} alt="Add Icon" /> შექმენი ახალი დავალება
-        </a>
+        </Link>
       </div>
     </div>
   );

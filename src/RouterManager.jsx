@@ -5,6 +5,7 @@ import useModalStore from "./useModalStore";
 
 import Nav from "./components/Nav";
 import TaskPage from "./routes/TaskPage";
+import CreateTask from "./routes/CreateTask";
 import TasksComponent from "./components/Tasks";
 import Modal from "./components/Modal";
 
@@ -64,10 +65,55 @@ export default function RouterManager() {
 
     fetchData();
   }, []);
+
+  async function reloadData(Res) {
+    const options = {
+      method: "GET",
+      url: API_URL + "/" + Res,
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+        Accept: "application/json",
+      },
+    };
+
+    try {
+      const { data } = await axios.request(options);
+      console.log(data);
+      switch (Res) {
+        case "statuses":
+          setStatuses(data);
+          break;
+        case "departments":
+          setDepartments(data);
+          break;
+        case "priorities":
+          setPriorities(data);
+          break;
+        case "employees":
+          setEmployees(data);
+          break;
+        case "tasks":
+          setTasks(data);
+          break;
+        default:
+          break;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
-    <Router>
+    <>
       <Nav openModal={openModal} />
-      <Modal isOpen={isOpen} onClose={closeModal} departments={departments} />
+      {isOpen && (
+        <Modal
+          isOpen={isOpen}
+          onClose={closeModal}
+          departments={departments}
+          reloadData={reloadData}
+        />
+      )}
 
       <div className="pt-[100px] px-[120px]">
         <Routes>
@@ -83,9 +129,24 @@ export default function RouterManager() {
               />
             }
           />
-          <Route path="/task/:taskid" element={<TaskPage />} />
+          <Route
+            path="/task/:taskid"
+            element={<TaskPage reloadData={reloadData} />}
+          />
+          <Route
+            path="/createTask"
+            element={
+              <CreateTask
+                statusesData={statuses}
+                departmentsData={departments}
+                prioritiesData={priorities}
+                employeesData={employees}
+                reloadData={reloadData}
+              />
+            }
+          />
         </Routes>
       </div>
-    </Router>
+    </>
   );
 }

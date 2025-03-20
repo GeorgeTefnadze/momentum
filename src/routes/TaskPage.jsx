@@ -26,7 +26,7 @@ function formatGeorgianDate(isoDate) {
   return `${dayOfWeek} - ${day}/${month}/${year}`;
 }
 
-export default function TaskPage() {
+export default function TaskPage({ reloadData }) {
   const { taskid } = useParams();
 
   const [taskData, setTaskData] = useState(null);
@@ -115,6 +115,8 @@ export default function TaskPage() {
       console.log(data);
     } catch (error) {
       console.error(error);
+    } finally {
+      reloadData("tasks");
     }
   };
 
@@ -251,7 +253,7 @@ export default function TaskPage() {
                   <img
                     src={taskData.employee.avatar}
                     alt=""
-                    className="w-[32px] h-[32px] rounded-full"
+                    className="w-[32px] h-[32px] rounded-full object-cover"
                   />
                 </div>
                 <div className="">
@@ -270,7 +272,7 @@ export default function TaskPage() {
           </div>
         </div>
       </div>
-      <div className="w-[741px] bg-commentsbg px-[45px] py-[40px] rounded-[10px]">
+      <div className="w-[741px] h-fit bg-commentsbg px-[45px] py-[40px] rounded-[10px]">
         <div className="flex flex-col items-end bg-white w-full min-h-[135px] rounded-[10px] px-[20px] pt-[18px] pb-[15px]">
           <textarea
             onChange={(e) => setCommentInput(e.target.value)}
@@ -283,7 +285,7 @@ export default function TaskPage() {
           />
           <button
             onClick={() => writeComment(commentInput)}
-            className="px-[20px] py-2 bg-mainpurple text-white rounded-[20px]"
+            className="px-[20px] py-2 bg-mainpurple text-white rounded-[20px] cursor-pointer"
           >
             დააკომენტარე
           </button>

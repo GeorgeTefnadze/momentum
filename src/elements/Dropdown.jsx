@@ -50,11 +50,6 @@ const Dropdown = ({
 
   const handleCheckboxChange = (option) => {
     getDropdownFilters(label, option);
-    // arrsetter((prev) =>
-    //   prev.includes(option)
-    //     ? prev.filter((item) => item !== option)
-    //     : [...prev, option]
-    // );
   };
 
   useEffect(() => {

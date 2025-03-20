@@ -37,6 +37,8 @@ const useColorById = (identifyer, id, prefix) => {
       }`;
     }
   }
+
+  return prefix + "-black";
 };
 
 export default useColorById;

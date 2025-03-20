@@ -1,19 +1,39 @@
 import FormInputs from "../elements/FormInputs";
+import CustomDropdown from "../elements/CustomDropdown";
 
 import closeIcon from "../assets/closeIcon.svg";
 import trashIcon from "../assets/trash.svg";
 import uploadIcon from "../assets/uploadIcon.svg";
-import arrowIcon from "../assets/arrowdown.svg";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
 
 // API_KEY ანუ BearerToken და API_URL რომლებსაც ვიღებთ .env ფაილიდან
 const API_KEY = import.meta.env.VITE_API_KEY;
 const API_URL = import.meta.env.VITE_API_URL;
 
-const Modal = ({ isOpen, onClose, departments }) => {
+const Modal = ({ isOpen, onClose, departments, reloadData }) => {
   if (!isOpen) return null;
+
+  const modalRef = useRef(null);
+
+  const handleClose = useCallback(() => {
+    onClose();
+  }, []);
+
+  useEffect(() => {
+    if (!modalRef.current) return;
+    function handleClickOutside(event) {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        handleClose();
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [onClose]);
 
   // ფორმის state
   const [formData, setFormData] = useState({
@@ -57,6 +77,13 @@ const Modal = ({ isOpen, onClose, departments }) => {
       [label === "სახელი" ? "name" : "surname"]: data,
     });
   };
+
+  function handleDepartments(id) {
+    setFormData({
+      ...formData,
+      department_id: id,
+    });
+  }
 
   // ფორმის ვალიდაცია
   const validateForm = () => {
@@ -112,18 +139,22 @@ const Modal = ({ isOpen, onClose, departments }) => {
 
     try {
       const { data } = await axios.request(options);
-      alert("მონაცემები წარმატებით გაიგზავნა!");
-      onClose();
       console.log(data);
     } catch (error) {
       alert("შეცდომა მოხდა!");
       console.error(error);
+    } finally {
+      reloadData("employees");
+      onClose();
     }
   };
 
   return (
     <div className="fixed w-screen h-screen z-50 flex items-center justify-center bg-[rgba(0,0,0,0.5)] backdrop-blur-sm">
-      <div className="bg-white w-[913px] h-[766px] rounded-[10px] px-[50px] pt-[40px] pb-[60px]">
+      <div
+        ref={modalRef}
+        className="bg-white w-[913px] h-[766px] rounded-[10px] px-[50px] pt-[40px] pb-[60px]"
+      >
         <div className="flex justify-end">
           <button onClick={onClose} className="cursor-pointer">
             <img src={closeIcon} alt="" />
@@ -138,16 +169,20 @@ const Modal = ({ isOpen, onClose, departments }) => {
             className="mt-[45px] flex flex-col gap-[45px]"
           >
             <div className="flex justify-between">
-              <FormInputs
-                label={"სახელი"}
-                formData={formData.name}
-                handleFormInputs={handleFormInputs}
-              />
-              <FormInputs
-                label={"გვარი"}
-                formData={formData.surname}
-                handleFormInputs={handleFormInputs}
-              />
+              <div className="w-[384px]">
+                <FormInputs
+                  label={"სახელი"}
+                  formData={formData.name}
+                  handleFormInputs={handleFormInputs}
+                />
+              </div>
+              <div className="w-[384px]">
+                <FormInputs
+                  label={"გვარი"}
+                  formData={formData.surname}
+                  handleFormInputs={handleFormInputs}
+                />
+              </div>
             </div>
             <div className="flex flex-col">
               <label htmlFor="pfp">
@@ -161,7 +196,7 @@ const Modal = ({ isOpen, onClose, departments }) => {
                 className="hidden"
                 onChange={handleFileChange}
               />
-              <div className="relative mt-[8px] flex items-center justify-center w-full h-[120px]  outline-dashed outline outline-mainoutline rounded-[8px]">
+              <div className="relative mt-[8px] flex items-center justify-center w-full h-[120px]  outline-dashed outline outline-mainoutline hover:outline-hoverpurple rounded-[8px]">
                 {formData.avatar ? (
                   <>
                     <label
@@ -199,44 +234,12 @@ const Modal = ({ isOpen, onClose, departments }) => {
                 )}
               </div>
             </div>
-            <div className="flex flex-col gap-[3px]">
-              <p>
-                დეპარტამენტი
-                <span>*</span>
-              </p>
-              <div className="relative w-[384px] h-[42px]">
-                <div
-                  className={`p-3 border border-gray-300 rounded-md bg-white flex ${
-                    formData.department_id ? "justify-between" : "justify-end"
-                  } items-center cursor-pointer`}
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                >
-                  {departments.find((dep) => dep.id === formData.department_id)
-                    ?.name || ""}
-                  <span className="text-textgray">
-                    <img src={arrowIcon} alt="" />
-                  </span>
-                </div>
-                {isDropdownOpen && (
-                  <ul className="absolute w-full h-[150px] overflow-y-scroll mt-1 bg-white border border-gray-300 rounded-md shadow-md z-10">
-                    {departments?.map((option) => (
-                      <li
-                        key={option.id}
-                        className="p-3 cursor-pointer hover:bg-gray-200 rounded-md"
-                        onClick={() => {
-                          setFormData((prev) => ({
-                            ...prev,
-                            department_id: option.id,
-                          }));
-                          setIsDropdownOpen(false);
-                        }}
-                      >
-                        {option.name}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+            <div className="w-[384px]">
+              <CustomDropdown
+                options={departments}
+                label={"დეპარტამენტი"}
+                handler={handleDepartments}
+              />
             </div>
             <div>
               <div className="flex gap-[22px] justify-end">

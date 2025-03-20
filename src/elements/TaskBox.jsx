@@ -36,7 +36,7 @@ export default function TaskBox({ item, colorid }) {
   return (
     <Link
       to={"/task/" + item.id}
-      className={`flex flex-col gap-[28px] w-[381px] h-[217px] p-[20px] outline-1 ${useColorById(
+      className={`flex flex-col justify-between w-[381px] h-[217px] p-[20px] outline-1 ${useColorById(
         "status",
         colorid,
         "outline"
@@ -75,14 +75,20 @@ export default function TaskBox({ item, colorid }) {
         </div>
       </div>
       <div className="flex flex-col gap-3">
-        <h3 className="text-[15px] font-medium">{item.name}</h3>
+        <h3 className="text-[15px] font-medium line-clamp-1">{item.name}</h3>
         <p className="text-[14px] text-maingray font-normal line-clamp-2">
-          {item.description}
+          {item.description?.length > 100
+            ? item.description.substring(0, 100) + "..."
+            : item.description}
         </p>
       </div>
       <div className="flex justify-between">
         <div className="w-[31px] h-[31px] rounded-full overflow-hidden flex items-center justify-center">
-          <img src={item.employee.avatar} alt="" />
+          <img
+            src={item.employee.avatar}
+            alt=""
+            className="object-cover h-full"
+          />
         </div>
         <div className="flex gap-1 items-center">
           <div>

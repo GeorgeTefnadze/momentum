@@ -55,7 +55,7 @@ export default function Tasks({
         setEmployeesFilters((prev) =>
           prev.includes(option.id)
             ? prev.filter((item) => item !== option.id)
-            : [...prev, option.id]
+            : [option.id]
         );
         break;
       default:
