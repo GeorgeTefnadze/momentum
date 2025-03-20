@@ -16,9 +16,11 @@ export default function Status({ item, tasks }) {
         {item.name}
       </div>
       <div className="mt-[30px] flex flex-col gap-[30px]">
-        {tasks.map((item, id) => (
-          <TaskBox key={item.id} item={item} colorid={item.status.id} />
-        ))}
+        {tasks
+          .sort((a, b) => b.id - a.id)
+          .map((item, id) => (
+            <TaskBox key={item.id} item={item} colorid={item.status.id} />
+          ))}
       </div>
     </div>
   );

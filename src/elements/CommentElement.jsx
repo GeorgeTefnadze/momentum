@@ -106,9 +106,11 @@ export default function CommentElement({ commentinfo, getComments }) {
             </button>
           </div>
           <div className="flex flex-col gap-4 pt-2">
-            {commentinfo.sub_comments.map((item) => (
-              <SubComment key={item.id} commentinfo={item} />
-            ))}
+            {commentinfo.sub_comments
+              .sort((a, b) => b.id - a.id)
+              .map((item) => (
+                <SubComment key={item.id} commentinfo={item} />
+              ))}
           </div>
         </div>
       </div>

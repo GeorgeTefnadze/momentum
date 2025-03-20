@@ -19,13 +19,13 @@ export default function RouterManager() {
   // თანამშრომლის შექმნისთვის საჭირო მოდალის state (zustand)
   const { isOpen, openModal, closeModal } = useModalStore();
 
-  const [statuses, setStatuses] = useState([]);
-  const [departments, setDepartments] = useState([]);
-  const [priorities, setPriorities] = useState([]);
-  const [employees, setEmployees] = useState([]);
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [APIData, setAPIData] = useState({
+    tasks: [],
+    statuses: [],
+    departments: [],
+    priorities: [],
+    employees: [],
+  });
 
   // რექუესთი API endpoint თან
   useEffect(() => {
@@ -50,16 +50,16 @@ export default function RouterManager() {
             }),
           ]);
 
-        setStatuses(statusRes.data);
-        setDepartments(departmentRes.data);
-        setPriorities(priorityRes.data);
-        setEmployees(employeesRes.data);
-        setTasks(tasksRes.data);
+        setAPIData({
+          tasks: tasksRes.data,
+          statuses: statusRes.data,
+          departments: departmentRes.data,
+          priorities: priorityRes.data,
+          employees: employeesRes.data,
+        });
       } catch (err) {
         setError("Error fetching data");
         console.error(err);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -110,7 +110,7 @@ export default function RouterManager() {
         <Modal
           isOpen={isOpen}
           onClose={closeModal}
-          departments={departments}
+          departments={APIData.departments}
           reloadData={reloadData}
         />
       )}
@@ -121,11 +121,11 @@ export default function RouterManager() {
             path="/"
             element={
               <TasksComponent
-                departments={departments}
-                priorities={priorities}
-                statuses={statuses}
-                employees={employees}
-                tasks={tasks}
+                departments={APIData.departments}
+                priorities={APIData.priorities}
+                statuses={APIData.statuses}
+                employees={APIData.employees}
+                tasks={APIData.tasks}
               />
             }
           />
@@ -137,10 +137,10 @@ export default function RouterManager() {
             path="/createTask"
             element={
               <CreateTask
-                statusesData={statuses}
-                departmentsData={departments}
-                prioritiesData={priorities}
-                employeesData={employees}
+                statusesData={APIData.statuses}
+                departmentsData={APIData.departments}
+                prioritiesData={APIData.priorities}
+                employeesData={APIData.employees}
                 reloadData={reloadData}
               />
             }

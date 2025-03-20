@@ -121,6 +121,9 @@ export default function TaskPage({ reloadData }) {
   };
 
   const writeComment = async (comment) => {
+    if (comment.replace(/\s/g, "").length === 0) {
+      return;
+    }
     setCommentInput("");
     const options = {
       method: "POST",
@@ -298,13 +301,15 @@ export default function TaskPage({ reloadData }) {
             </p>
           </div>
           <div className="flex flex-col gap-[38px] pt-[40px]">
-            {comments.map((item) => (
-              <CommentElement
-                key={item.id}
-                commentinfo={item}
-                getComments={getComments}
-              />
-            ))}
+            {comments
+              .sort((a, b) => b.id - a.id)
+              .map((item) => (
+                <CommentElement
+                  key={item.id}
+                  commentinfo={item}
+                  getComments={getComments}
+                />
+              ))}
           </div>
         </div>
       </div>

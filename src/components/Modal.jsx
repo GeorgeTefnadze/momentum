@@ -108,6 +108,11 @@ const Modal = ({ isOpen, onClose, departments, reloadData }) => {
       newErrors.department_id = "დეპარტამენტი სავალდებულოა";
 
     setErrors(newErrors);
+
+    Object.values(newErrors).forEach((error) => {
+      alert(error);
+    });
+
     return Object.keys(newErrors).length === 0;
   };
 
@@ -244,7 +249,10 @@ const Modal = ({ isOpen, onClose, departments, reloadData }) => {
             <div>
               <div className="flex gap-[22px] justify-end">
                 <button
-                  onClick={onClose}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onClose();
+                  }}
                   className="px-4 py-[10px] rounded-[5px] outline outline-mainpurple hover:outline-hoverpurple duration-200 text-[16px]"
                 >
                   გაუქმება
