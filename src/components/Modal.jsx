@@ -7,6 +7,7 @@ import uploadIcon from "../assets/uploadIcon.svg";
 
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
+import useToastStore from "../hooks/useToastStore";
 
 // API_KEY ანუ BearerToken და API_URL რომლებსაც ვიღებთ .env ფაილიდან
 const API_KEY = import.meta.env.VITE_API_KEY;
@@ -15,7 +16,21 @@ const API_URL = import.meta.env.VITE_API_URL;
 const Modal = ({ isOpen, onClose, departments, reloadData }) => {
   if (!isOpen) return null;
 
+  const { showSuccess, showError } = useToastStore();
+
   const modalRef = useRef(null);
+
+  // ფორმის state
+  const [formData, setFormData] = useState({
+    name: "",
+    surname: "",
+    avatar: null,
+    department_id: "",
+  });
+
+  const [avatarPreview, setAvatarPreview] = useState(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const handleClose = useCallback(() => {
     onClose();
@@ -34,17 +49,6 @@ const Modal = ({ isOpen, onClose, departments, reloadData }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [onClose]);
-
-  // ფორმის state
-  const [formData, setFormData] = useState({
-    name: "",
-    surname: "",
-    avatar: null,
-    department_id: "",
-  });
-  const [avatarPreview, setAvatarPreview] = useState(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [errors, setErrors] = useState({});
 
   // სურათის ატვირთვა
   const handleFileChange = (event) => {
@@ -109,8 +113,10 @@ const Modal = ({ isOpen, onClose, departments, reloadData }) => {
 
     setErrors(newErrors);
 
-    Object.values(newErrors).forEach((error) => {
-      alert(error);
+    Object.values(newErrors).forEach((error, index) => {
+      setTimeout(() => {
+        showError(error);
+      }, index * 300);
     });
 
     return Object.keys(newErrors).length === 0;
@@ -121,7 +127,6 @@ const Modal = ({ isOpen, onClose, departments, reloadData }) => {
     e.preventDefault();
 
     if (!validateForm()) {
-      console.log(errors);
       return;
     }
 
@@ -144,12 +149,12 @@ const Modal = ({ isOpen, onClose, departments, reloadData }) => {
 
     try {
       const { data } = await axios.request(options);
-      console.log(data);
     } catch (error) {
       alert("შეცდომა მოხდა!");
       console.error(error);
     } finally {
       reloadData("employees");
+      showSuccess("თანამშრომელი წარმატებით დაემატა");
       onClose();
     }
   };

@@ -5,6 +5,7 @@ import CustomDatepicker from "../elements/CustomDatepicker";
 import dayjs from "dayjs";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import useToastStore from "../hooks/useToastStore";
 
 // API_KEY ანუ BearerToken და API_URL რომლებსაც ვიღებთ .env ფაილიდან
 const API_KEY = import.meta.env.VITE_API_KEY;
@@ -18,6 +19,7 @@ export default function CreateTask({
   reloadData,
 }) {
   const navigate = useNavigate();
+  const { showSuccess, showError } = useToastStore();
 
   // ფორმის state
   const [formData, setFormData] = useState({
@@ -71,45 +73,45 @@ export default function CreateTask({
     let errors = {};
 
     if (!formData.title.trim()) {
-      errors.title = "სათაური სავალდებულოა.";
+      errors.title = "სათაური სავალდებულოა";
     } else if (formData.title.length < 3) {
-      errors.title = "სათაური უნდა იყოს მინიმუმ 3 სიმბოლო.";
+      errors.title = "სათაური უნდა იყოს მინიმუმ 3 სიმბოლო";
     } else if (formData.title.length > 255) {
-      errors.title = "სათაური უნდა იყოს მაქსიმუმ 255 სიმბოლო.";
+      errors.title = "სათაური უნდა იყოს მაქსიმუმ 255 სიმბოლო";
     }
 
     if (formData.description.trim()) {
       const wordCount = formData.description.trim().split(/\s+/).length;
       if (wordCount < 4) {
-        errors.description = "აღწერა უნდა შეიცავდეს მინიმუმ 4 სიტყვას.";
+        errors.description = "აღწერა უნდა შეიცავდეს მინიმუმ 4 სიტყვას";
       }
       if (formData.description.length > 255) {
-        errors.description = "აღწერა არ უნდა აღემატებოდეს 255 სიმბოლოს.";
+        errors.description = "აღწერა არ უნდა აღემატებოდეს 255 სიმბოლოს";
       }
     }
 
     if (!statuses.some((status) => status.id === formData.status_id)) {
-      errors.status_id = "არასწორი სტატუსი.";
+      errors.status_id = "არასწორი სტატუსი";
     }
 
     if (!formData.department_id) {
-      errors.department_id = "დეპარტამენტი სავალდებულოა.";
+      errors.department_id = "დეპარტამენტი სავალდებულოა";
     } else if (!departments.some((dep) => dep.id === formData.department_id)) {
-      errors.department_id = "არასწორი დეპარტამენტი.";
+      errors.department_id = "არასწორი დეპარტამენტი";
     }
 
     if (!priorities.some((priority) => priority.id === formData.priority_id)) {
-      errors.priority_id = "არასწორი პრიორიტეტი.";
+      errors.priority_id = "არასწორი პრიორიტეტი";
     }
 
     if (!formData.employee_id) {
-      errors.employee_id = "პასუხისმგებელი თანამშრომელი სავალდებულოა.";
+      errors.employee_id = "პასუხისმგებელი თანამშრომელი სავალდებულოა";
     } else if (!employees.some((emp) => emp.id === formData.employee_id)) {
-      errors.employee_id = "არასწორი თანამშრომელი.";
+      errors.employee_id = "არასწორი თანამშრომელი";
     }
 
     if (!formData.deadline) {
-      errors.deadline = "დედლაინი სავალდებულოა.";
+      errors.deadline = "დედლაინი სავალდებულოა";
     } else {
       const selectedDate = new Date(formData.deadline);
       const tomorrow = new Date();
@@ -117,7 +119,7 @@ export default function CreateTask({
       tomorrow.setHours(0, 0, 0, 0);
 
       if (selectedDate < tomorrow) {
-        errors.deadline = "დედლაინი უნდა იყოს მინიმუმ ხვალინდელი.";
+        errors.deadline = "დედლაინი უნდა იყოს მინიმუმ ხვალინდელი";
       }
     }
 
@@ -134,8 +136,10 @@ export default function CreateTask({
     );
 
     if (Object.keys(errors).length > 0) {
-      Object.entries(errors).forEach(([key, value]) => {
-        alert(`${value}`);
+      Object.entries(errors).forEach(([key, value], index) => {
+        setTimeout(() => {
+          showError(value);
+        }, index * 300);
       });
       return;
     }
@@ -160,10 +164,10 @@ export default function CreateTask({
 
     try {
       const { data } = await axios.request(options);
-      console.log(data);
     } catch (error) {
-      alert(error);
+      console.error(error);
     } finally {
+      showSuccess("დავალება წარმატებით შეიქმნა");
       reloadData("tasks");
       navigate(`/`);
     }

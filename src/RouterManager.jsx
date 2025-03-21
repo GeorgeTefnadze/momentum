@@ -1,13 +1,14 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import useModalStore from "./useModalStore";
+import useModalStore from "./hooks/useModalStore";
 
 import Nav from "./components/Nav";
 import TaskPage from "./routes/TaskPage";
 import CreateTask from "./routes/CreateTask";
 import TasksComponent from "./components/Tasks";
 import Modal from "./components/Modal";
+import { Toaster } from "react-hot-toast";
 
 import axios from "axios";
 
@@ -67,6 +68,16 @@ export default function RouterManager() {
   }, []);
 
   async function reloadData(Res) {
+    if (!Res) {
+      console.error("Res is undefined or invalid");
+      return;
+    }
+
+    if (!(Res in APIData)) {
+      console.error("Res is invalid");
+      return;
+    }
+
     const options = {
       method: "GET",
       url: API_URL + "/" + Res,
@@ -78,26 +89,7 @@ export default function RouterManager() {
 
     try {
       const { data } = await axios.request(options);
-      console.log(data);
-      switch (Res) {
-        case "statuses":
-          setStatuses(data);
-          break;
-        case "departments":
-          setDepartments(data);
-          break;
-        case "priorities":
-          setPriorities(data);
-          break;
-        case "employees":
-          setEmployees(data);
-          break;
-        case "tasks":
-          setTasks(data);
-          break;
-        default:
-          break;
-      }
+      setAPIData((prev) => ({ ...prev, [Res]: data }));
     } catch (error) {
       console.error(error);
     }
@@ -105,6 +97,43 @@ export default function RouterManager() {
 
   return (
     <>
+      <Toaster
+        reverseOrder={false}
+        toastOptions={{
+          duration: 2000,
+          autoClose: true,
+          isClosable: true,
+          pauseOnHover: true,
+          closeOnClick: true,
+          draggable: false,
+          progress: undefined,
+          limit: undefined,
+          newestOnTop: true,
+          theme: "light",
+          toastClassName: "toast",
+          containerClassName: "toast-container",
+          bodyClassName: "toast-body",
+          progressClassName: "toast-progress",
+          closeButtonClassName: "toast-close-button",
+          icon: undefined,
+          iconPosition: "left",
+          iconSize: undefined,
+          offset: [0, 30],
+          position: "top-center",
+          rtl: false,
+          draggablePercent: 80,
+          transitionDuration: 0.3,
+          easing: "ease",
+          className: undefined,
+          content: undefined,
+          children: undefined,
+          component: undefined,
+          style: {
+            outline: "1px solid #b588f4",
+            textAlign: "center",
+          },
+        }}
+      />
       <Nav openModal={openModal} />
       {isOpen && (
         <Modal

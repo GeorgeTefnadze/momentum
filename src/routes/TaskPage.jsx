@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import axios from "axios";
 import useColorById from "../hooks/useColorById";
+import useToastStore from "../hooks/useToastStore";
 
 import CommentElement from "../elements/CommentElement";
 
@@ -28,6 +29,12 @@ function formatGeorgianDate(isoDate) {
 
 export default function TaskPage({ reloadData }) {
   const { taskid } = useParams();
+  const total_comments = useLocation();
+  const { showSuccess, showError } = useToastStore();
+
+  useEffect(() => {
+    console.log(total_comments, "Total");
+  }, []);
 
   const [taskData, setTaskData] = useState(null);
   const [statuses, setStatuses] = useState(null);
@@ -60,10 +67,8 @@ export default function TaskPage({ reloadData }) {
 
         getComments();
 
-        console.log(tasksRes.data);
         setTaskData(tasksRes.data);
         setSelectedStatus(tasksRes.data.status);
-        console.log(statusRes.data);
         setStatuses(statusRes.data);
       } catch (err) {
         setError("Error fetching data");
@@ -91,7 +96,6 @@ export default function TaskPage({ reloadData }) {
 
     try {
       const { data } = await axios.request(options);
-      console.log(data);
       setComments(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error(error);
@@ -112,10 +116,10 @@ export default function TaskPage({ reloadData }) {
 
     try {
       const { data } = await axios.request(options);
-      console.log(data);
     } catch (error) {
       console.error(error);
     } finally {
+      showSuccess("სტატუსი წარმატებით განახლდა");
       reloadData("tasks");
     }
   };
@@ -141,7 +145,6 @@ export default function TaskPage({ reloadData }) {
 
     try {
       const { data } = await axios.request(options);
-      console.log(data);
     } catch (error) {
       console.error(error);
     } finally {
@@ -297,7 +300,7 @@ export default function TaskPage({ reloadData }) {
           <div className="flex gap-[7px] items-center">
             <h2 className="text-[20px] font-semibold">კომენტარები</h2>
             <p className="px-[10px] rounded-[30px] text-[14px] bg-mainpurple text-white">
-              {comments.length}
+              {total_comments?.state}
             </p>
           </div>
           <div className="flex flex-col gap-[38px] pt-[40px]">

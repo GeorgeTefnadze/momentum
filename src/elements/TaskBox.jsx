@@ -36,6 +36,7 @@ export default function TaskBox({ item, colorid }) {
   return (
     <Link
       to={"/task/" + item.id}
+      state={item.total_comments}
       className={`flex flex-col justify-between w-[381px] h-[217px] p-[20px] outline-1 ${useColorById(
         "status",
         colorid,
@@ -75,7 +76,9 @@ export default function TaskBox({ item, colorid }) {
         </div>
       </div>
       <div className="flex flex-col gap-3">
-        <h3 className="text-[15px] font-medium line-clamp-1">{item.name}</h3>
+        <h3 className="text-[15px] font-medium text-wrap line-clamp-2">
+          {item.name}
+        </h3>
         <p className="text-[14px] text-maingray font-normal line-clamp-2">
           {item.description?.length > 100
             ? item.description.substring(0, 100) + "..."

@@ -2,10 +2,6 @@ import React, { useEffect } from "react";
 import xIcon from "../assets/x.svg";
 
 export default function Filters({ identifyer, info, handleFilters }) {
-  useEffect(() => {
-    console.log(info);
-  }, [info]);
-
   return (
     <button
       onClick={() => handleFilters(identifyer, info.id)}

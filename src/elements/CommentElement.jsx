@@ -36,7 +36,6 @@ export default function CommentElement({ commentinfo, getComments }) {
 
     try {
       const { data } = await axios.request(options);
-      console.log(data);
     } catch (error) {
       console.error(error);
     } finally {

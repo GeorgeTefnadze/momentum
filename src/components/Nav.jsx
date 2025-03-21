@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import momentumLogo from "../assets/momentum.svg";
 import addIcon from "../assets/add.svg";
+import { Button } from "@mui/material";
 
 export default function Nav({ openModal }) {
   // state რომელიც ინახავს ფანჯრის scrollY მდგომარეობას
@@ -33,13 +34,13 @@ export default function Nav({ openModal }) {
       {/* ღილაკების კონტეინერი */}
       <div className="flex gap-[40px]">
         {/* ღილაკი თანამშრომლის შესაქმნელად */}
-        <a
+        <button
           onClick={openModal} // openModal ფუნქციის გამოძახება მოდალის გასახსნელად
           href="#"
           className="px-[20px] py-[10px] text-[16px] border-1 border-mainpurple hover:border-hoverpurple duration-200 rounded-[5px]"
         >
           თანამშრომლის შექმნა
-        </a>
+        </button>
 
         {/* ღილაკი ახალი დავალების შესაქმნელად */}
         <Link

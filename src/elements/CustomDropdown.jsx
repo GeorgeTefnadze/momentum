@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import arrowIcon from "../assets/arrowdown.svg";
 import addemployeeIcon from "../assets/addemployee.svg";
-import useModalStore from "../useModalStore";
+import useModalStore from "../hooks/useModalStore";
 
 export default function CustomDropdown({
   handler,
