@@ -8,7 +8,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import dayjs from "dayjs";
 import "dayjs/locale/ka";
 
-export default function CustomDatepicker({ handler, defaultValue }) {
+export default function CustomDatepicker({ handler, defaultValue, customKey }) {
   const [selectedDate, setSelectedDate] = useState(defaultValue);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -18,9 +18,9 @@ export default function CustomDatepicker({ handler, defaultValue }) {
         value={selectedDate}
         onChange={(newDate) => {
           if (newDate) {
-            const formattedDate = dayjs(newDate).format("YYYY-MM-DD");
+            const formattedDate = dayjs(newDate);
             setSelectedDate(newDate);
-            handler(formattedDate);
+            handler(customKey, newDate);
           }
         }}
         format="DD/MM/YYYY"

@@ -80,7 +80,7 @@ export default function Tasks({
         ...prev,
         [key]:
           key === "employees"
-            ? prev[key].length > 0
+            ? prev[key][0] === option.id
               ? []
               : [option.id]
             : prev[key].includes(option.id)

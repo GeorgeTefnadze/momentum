@@ -37,7 +37,7 @@ export default function Nav({ openModal }) {
         <button
           onClick={openModal} // openModal ფუნქციის გამოძახება მოდალის გასახსნელად
           href="#"
-          className="px-[20px] py-[10px] text-[16px] border-1 border-mainpurple hover:border-hoverpurple duration-200 rounded-[5px]"
+          className="px-[20px] py-[10px] text-[16px] border-1 border-mainpurple hover:border-hoverpurple duration-200 rounded-[5px] cursor-pointer"
         >
           თანამშრომლის შექმნა
         </button>

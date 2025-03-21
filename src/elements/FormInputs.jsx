@@ -4,6 +4,7 @@ import checkmark from "../assets/checkmark.svg";
 import { useEffect } from "react";
 
 export default function FormInputs({
+  customKey,
   label,
   formData,
   handleFormInputs,
@@ -54,7 +55,7 @@ export default function FormInputs({
       {textarea ? (
         <textarea
           value={formData}
-          onChange={(e) => handleFormInputs(label, e.target.value)}
+          onChange={(e) => handleFormInputs(customKey, e.target.value)}
           required
           type="text"
           id={label}
@@ -64,7 +65,7 @@ export default function FormInputs({
       ) : (
         <input
           value={formData}
-          onChange={(e) => handleFormInputs(label, e.target.value)}
+          onChange={(e) => handleFormInputs(customKey, e.target.value)}
           required
           type="text"
           id={label}

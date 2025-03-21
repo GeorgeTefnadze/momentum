@@ -32,10 +32,6 @@ export default function TaskPage({ reloadData }) {
   const total_comments = useLocation();
   const { showSuccess, showError } = useToastStore();
 
-  useEffect(() => {
-    console.log(total_comments, "Total");
-  }, []);
-
   const [taskData, setTaskData] = useState(null);
   const [statuses, setStatuses] = useState(null);
   const [comments, setComments] = useState(null);

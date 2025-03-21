@@ -4,22 +4,20 @@ import addemployeeIcon from "../assets/addemployee.svg";
 import useModalStore from "../hooks/useModalStore";
 
 export default function CustomDropdown({
+  customKey,
   handler,
   options,
   label,
   department_id,
   defaultValue,
   createEmployee,
+  clearEmployees,
 }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [filteredOptions, setFilteredOptions] = useState(options);
   const dropdownRef = useRef(null);
   const { openModal } = useModalStore();
-
-  useEffect(() => {
-    setSelectedOption(null);
-  }, [department_id]);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -114,7 +112,8 @@ export default function CustomDropdown({
                 key={option.id}
                 className="flex items-center gap-[10px] p-3 cursor-pointer hover:bg-gray-200 rounded-md"
                 onClick={() => {
-                  handler(option.id);
+                  handler(customKey, option.id);
+                  clearEmployees ? clearEmployees() : null;
                   setSelectedOption(option);
                   setIsDropdownOpen(false);
                 }}

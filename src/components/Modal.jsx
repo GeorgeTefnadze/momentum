@@ -75,14 +75,14 @@ const Modal = ({ isOpen, onClose, departments, reloadData }) => {
     }
   };
 
-  const handleFormInputs = (label, data) => {
+  const handleFormInputs = (key, data) => {
     setFormData({
       ...formData,
-      [label === "სახელი" ? "name" : "surname"]: data,
+      [key]: data,
     });
   };
 
-  function handleDepartments(id) {
+  function handleDepartments(key, id) {
     setFormData({
       ...formData,
       department_id: id,
@@ -184,6 +184,7 @@ const Modal = ({ isOpen, onClose, departments, reloadData }) => {
                   label={"სახელი"}
                   formData={formData.name}
                   handleFormInputs={handleFormInputs}
+                  customKey={"name"}
                 />
               </div>
               <div className="w-[384px]">
@@ -191,6 +192,7 @@ const Modal = ({ isOpen, onClose, departments, reloadData }) => {
                   label={"გვარი"}
                   formData={formData.surname}
                   handleFormInputs={handleFormInputs}
+                  customKey={"surname"}
                 />
               </div>
             </div>
@@ -206,7 +208,7 @@ const Modal = ({ isOpen, onClose, departments, reloadData }) => {
                 className="hidden"
                 onChange={handleFileChange}
               />
-              <div className="relative mt-[8px] flex items-center justify-center w-full h-[120px]  outline-dashed outline outline-mainoutline hover:outline-hoverpurple rounded-[8px]">
+              <div className="relative mt-[8px] flex items-center justify-center w-full h-[120px]  outline-dashed outline-mainoutline hover:outline-hoverpurple rounded-[8px]">
                 {formData.avatar ? (
                   <>
                     <label

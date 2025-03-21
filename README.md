@@ -34,8 +34,16 @@ Momentum is a modern task-tracking web application (RedBerry BootCamp)
 
 4. Install dependencies:
 
-- npm install
+<pre>
+    <code>
+npm install
+    </code>
+</pre>
 
 5. Run the development server:
 
-- npm run dev
+<pre>
+    <code>
+npm run dev
+    </code>
+</pre>

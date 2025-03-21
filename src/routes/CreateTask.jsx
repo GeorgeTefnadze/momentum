@@ -3,9 +3,12 @@ import FormInputs from "../elements/FormInputs";
 import CustomDropdown from "../elements/CustomDropdown";
 import CustomDatepicker from "../elements/CustomDatepicker";
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import useToastStore from "../hooks/useToastStore";
+
+dayjs.extend(customParseFormat);
 
 // API_KEY ანუ BearerToken და API_URL რომლებსაც ვიღებთ .env ფაილიდან
 const API_KEY = import.meta.env.VITE_API_KEY;
@@ -18,50 +21,49 @@ export default function CreateTask({
   employeesData,
   reloadData,
 }) {
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { showSuccess, showError } = useToastStore();
 
   // ფორმის state
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    department_id: "",
-    employee_id: "",
-    priority_id: 2,
-    status_id: 1,
-    deadline: dayjs().add(1, "day"),
+    title: searchParams.get("title") || "",
+    description: searchParams.get("description") || "",
+    department_id: searchParams.get("department_id") || "",
+    employee_id: searchParams.get("employee_id") || "",
+    priority_id: Number(searchParams.get("priority_id")) || 2,
+    status_id: Number(searchParams.get("status_id")) || 1,
+    deadline: searchParams.get("deadline")
+      ? dayjs(searchParams.get("deadline"))
+      : dayjs().add(1, "day"),
   });
 
   useEffect(() => {
-    setFormData((prev) => ({ ...prev, employee_id: "" }));
-  }, [formData.department_id]);
+    setSearchParams({
+      title: formData.title,
+      description: formData.description,
+      department_id: formData.department_id,
+      employee_id: formData.employee_id,
+      priority_id: formData.priority_id,
+      status_id: formData.status_id,
+      deadline: formData.deadline,
+    });
+  }, [formData, setSearchParams]);
 
-  const handleFormInputs = (label, data) => {
+  // useEffect(() => {
+  //   setFormData((prev) => ({ ...prev, employee_id: "" }));
+  // }, [formData.department_id]);
+
+  function clearEmployees() {
+    setFormData((prev) => ({ ...prev, employee_id: "" }));
+  }
+
+  const handleFormInputs = (customKey, data) => {
     setFormData({
       ...formData,
-      [label === "სათაური" ? "title" : "description"]: data,
+      [customKey]: data,
     });
   };
-
-  function handleDepartments(id) {
-    setFormData({ ...formData, department_id: id });
-  }
-
-  function handleEmployee(id) {
-    setFormData({ ...formData, employee_id: id });
-  }
-
-  function handlePriority(id) {
-    setFormData({ ...formData, priority_id: id });
-  }
-
-  function handleStatus(id) {
-    setFormData({ ...formData, status_id: id });
-  }
-
-  function handleDeadline(date) {
-    setFormData({ ...formData, deadline: date });
-  }
 
   const validateFormData = (
     formData,
@@ -96,17 +98,17 @@ export default function CreateTask({
 
     if (!formData.department_id) {
       errors.department_id = "დეპარტამენტი სავალდებულოა";
-    } else if (!departments.some((dep) => dep.id === formData.department_id)) {
+    } else if (!departments.some((dep) => dep.id == formData.department_id)) {
       errors.department_id = "არასწორი დეპარტამენტი";
     }
 
-    if (!priorities.some((priority) => priority.id === formData.priority_id)) {
+    if (!priorities.some((priority) => priority.id == formData.priority_id)) {
       errors.priority_id = "არასწორი პრიორიტეტი";
     }
 
     if (!formData.employee_id) {
       errors.employee_id = "პასუხისმგებელი თანამშრომელი სავალდებულოა";
-    } else if (!employees.some((emp) => emp.id === formData.employee_id)) {
+    } else if (!employees.some((emp) => emp.id == formData.employee_id)) {
       errors.employee_id = "არასწორი თანამშრომელი";
     }
 
@@ -146,7 +148,7 @@ export default function CreateTask({
 
     const options = {
       method: "POST",
-      url: "https://momentum.redberryinternship.ge/api/tasks",
+      url: API_URL + "/tasks",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -186,13 +188,19 @@ export default function CreateTask({
               label={"სათაური"}
               formData={formData.title}
               handleFormInputs={handleFormInputs}
+              customKey={"title"}
             />
           </div>
           <div className="w-[550px]">
             <CustomDropdown
               options={departmentsData}
               label={"დეპარტამენტი"}
-              handler={handleDepartments}
+              handler={handleFormInputs}
+              customKey={"department_id"}
+              clearEmployees={clearEmployees}
+              defaultValue={departmentsData.find(
+                (item) => item.id == formData.department_id
+              )}
             />
           </div>
         </div>
@@ -202,8 +210,9 @@ export default function CreateTask({
               label={"აღწერა"}
               formData={formData.description}
               handleFormInputs={handleFormInputs}
+              customKey={"description"}
               textarea={true}
-              min={3}
+              min={4}
               countWords={true}
             />
           </div>
@@ -211,7 +220,11 @@ export default function CreateTask({
             <CustomDropdown
               options={employeesData}
               label={"პასუხისმგებელი თანამშრომელი"}
-              handler={handleEmployee}
+              handler={handleFormInputs}
+              customKey={"employee_id"}
+              defaultValue={employeesData.find(
+                (item) => item.id == formData.employee_id
+              )}
               department_id={formData.department_id}
               createEmployee={true}
             />
@@ -224,7 +237,8 @@ export default function CreateTask({
                 <CustomDropdown
                   options={prioritiesData}
                   label={"პრიორიტეტი"}
-                  handler={handlePriority}
+                  handler={handleFormInputs}
+                  customKey={"priority_id"}
                   defaultValue={prioritiesData.find(
                     (item) => item.id === formData.priority_id
                   )}
@@ -234,7 +248,8 @@ export default function CreateTask({
                 <CustomDropdown
                   options={statusesData}
                   label={"სტატუსი"}
-                  handler={handleStatus}
+                  handler={handleFormInputs}
+                  customKey={"status_id"}
                   defaultValue={statusesData.find(
                     (item) => item.id === formData.status_id
                   )}
@@ -247,7 +262,8 @@ export default function CreateTask({
               <p>დედლაინი</p>
               <div className="w-[320px] mt-1 bg-white">
                 <CustomDatepicker
-                  handler={handleDeadline}
+                  handler={handleFormInputs}
+                  customKey={"deadline"}
                   defaultValue={formData.deadline}
                 />
               </div>
