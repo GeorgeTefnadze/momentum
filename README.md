@@ -5,7 +5,7 @@ Momentum is a modern task-tracking web application (RedBerry BootCamp)
 ## ✨ Features
 
 - 📝 Create, edit, and delete tasks
-- 📌 Organize tasks by priority and department
+- 📌 Organize tasks by priority, department and employee
 - 🔍 Search and filter tasks dynamically
 - ⚡ Fast and responsive UI
 
@@ -15,13 +15,18 @@ Momentum is a modern task-tracking web application (RedBerry BootCamp)
 - ⚛️ **React** - Modern frontend framework
 - 🎨 **Tailwind CSS** - Utility-first styling
 - 🌍 **React Router** - Client-side routing for seamless navigation
+- ⚡ **Zustand** - A fast and minimal state management library for React applications
 
 ## 🔧 Installation Guide
 
 1. In the main folder, create a `.env` file and add the following variables:
 
-- VITE_API_KEY=YOURAPIKEY
-- VITE_API_URL=https://momentum.redberryinternship.ge/api
+<pre>
+    <code>
+    VITE_API_KEY=YOURAPIKEY
+    VITE_API_URL=https://momentum.redberryinternship.ge/api
+    </code>
+</pre>
 
 2. Get your API key from: https://momentum.redberryinternship.ge/
 

@@ -80,7 +80,9 @@ export default function Tasks({
         ...prev,
         [key]:
           key === "employees"
-            ? [option.id]
+            ? prev[key].length > 0
+              ? []
+              : [option.id]
             : prev[key].includes(option.id)
             ? prev[key].filter((item) => item !== option.id)
             : [...prev[key], option.id],

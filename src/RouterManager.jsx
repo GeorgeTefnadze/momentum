@@ -6,7 +6,7 @@ import useModalStore from "./hooks/useModalStore";
 import Nav from "./components/Nav";
 import TaskPage from "./routes/TaskPage";
 import CreateTask from "./routes/CreateTask";
-import TasksComponent from "./components/Tasks";
+import TasksComponent from "./routes/Tasks.jsx";
 import Modal from "./components/Modal";
 import { Toaster } from "react-hot-toast";
 
